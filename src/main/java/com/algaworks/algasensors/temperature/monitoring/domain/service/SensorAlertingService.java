@@ -4,6 +4,7 @@ import com.algaworks.algasensors.temperature.monitoring.api.model.TemperatureLog
 import com.algaworks.algasensors.temperature.monitoring.domain.model.SensorAlert;
 import com.algaworks.algasensors.temperature.monitoring.domain.model.SensorId;
 import com.algaworks.algasensors.temperature.monitoring.domain.repository.SensorAlertRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ public class SensorAlertingService {
 
     private final SensorAlertRepository sensorAlertRepository;
 
+    @Transactional
     public void handleAlert(TemperatureLogData temperatureLogData) {
         sensorAlertRepository.findById(new SensorId(temperatureLogData.getSensorId()))
                 .ifPresentOrElse(sensor -> handle(temperatureLogData, sensor), () -> logIgnoredSensor(temperatureLogData));
